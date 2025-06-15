@@ -1,4 +1,3 @@
-# k8s/featureflagservice-deployment.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -13,6 +12,8 @@ spec:
       labels:
         app: featureflagservice
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: featureflagservice
           image: ghcr.io/eddykaggia/featureflagservice:latest

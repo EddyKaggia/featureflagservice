@@ -27,7 +27,7 @@ class FeatureFlagController {
     @Autowired
     private RedisTemplate<String, FeatureFlag> redisTemplate;
 
-    private static final String API_KEY = "my-secret-key";
+    private static final String API_KEY = System.getenv("API_KEY");
 
     private boolean isAuthorized(String apiKey) {
         return API_KEY.equals(apiKey);
