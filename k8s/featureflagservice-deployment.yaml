@@ -1,0 +1,43 @@
+# k8s/featureflagservice-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: featureflagservice
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: featureflagservice
+  template:
+    metadata:
+      labels:
+        app: featureflagservice
+    spec:
+      containers:
+        - name: featureflagservice
+          image: ghcr.io/eddykaggia/featureflagservice:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: REDIS_HOST
+              value: featureflagservice-redis.6c8rxm.0001.usw1.cache.amazonaws.com
+            - name: REDIS_PORT
+              value: "6379"
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: featureflagservice-secret
+                  key: api-key
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: featureflagservice
+spec:
+  selector:
+    app: featureflagservice
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
